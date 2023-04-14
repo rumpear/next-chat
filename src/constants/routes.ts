@@ -1,4 +1,7 @@
 export const ROUTES = {
   login: '/login',
-  dashboard: '/dashboard',
+  dashboard: {
+    base: '/dashboard',
+    add: '/add',
+  },
 };
