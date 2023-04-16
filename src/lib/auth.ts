@@ -36,8 +36,11 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      const dbUser: User | null = await db.get(`user: ${token.id}`);
-      console.log(dbUser);
+      const dbUser: User | null = await db.get(`user:${token.id}`);
+      console.log(dbUser, 'dbUser auth lib');
+      console.log(user, 'user auth lib');
+      console.log(token, 'token auth lib');
+
       if (!dbUser) {
         token.id = user.id;
         return token;
@@ -61,7 +64,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     redirect() {
-      return ROUTES.dashboard;
+      return ROUTES.dashboard.base;
     },
   },
 };
