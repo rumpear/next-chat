@@ -6,10 +6,6 @@ import { getServerSession } from 'next-auth';
 import { ZodError, z } from 'zod';
 
 type TBody = z.infer<typeof emailSchema>;
-interface IData {
-  result: string;
-}
-
 type TIsMember = 0 | 1;
 
 export async function POST(req: Request) {
@@ -18,7 +14,7 @@ export async function POST(req: Request) {
 
     const { email: emailToAdd } = emailSchema.parse(body);
 
-    const idToAdd = await fetchRedis('get', `/get/user:email:${emailToAdd}`);
+    const idToAdd = await fetchRedis<string>('get', `user:email:${emailToAdd}`);
     console.log(idToAdd, 'idToAdd');
 
     if (!idToAdd) {
@@ -37,10 +33,7 @@ export async function POST(req: Request) {
       });
     }
 
-    //? isAlreadyAdded returned 0 | 1, but Type 'string | number' is not assignable to type  0 | 1.
-    //? Type 'string' is not assignable to type  0 | 1
-
-    const isAlreadyAdded = await fetchRedis(
+    const isAlreadyAdded = await fetchRedis<TIsMember>(
       'sismember',
       `user:${idToAdd}:incoming_friend_requests`,
       session.user.id
@@ -52,7 +45,7 @@ export async function POST(req: Request) {
       return new Response('This user already added', { status: 409 });
     }
 
-    const isAlreadyFriends = await fetchRedis(
+    const isAlreadyFriends = await fetchRedis<TIsMember>(
       'sismember',
       `user:${session.user.id}:friends`,
       idToAdd
