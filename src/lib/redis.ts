@@ -1,9 +1,15 @@
 type TCommand = 'zrange' | 'sismember' | 'get' | 'smembers';
-interface IData {
-  result: string | number;
+
+interface IData<R> {
+  result: R;
 }
 
-export const fetchRedis = async (
+type TFetchRedis = <R>(
+  command: TCommand,
+  ...args: (string | number)[]
+) => Promise<R>;
+
+export const fetchRedis: TFetchRedis = async <R>(
   command: TCommand,
   ...args: (string | number)[]
 ) => {
@@ -21,6 +27,6 @@ export const fetchRedis = async (
     throw new Error(`Error executing command: ${res.statusText}`);
   }
 
-  const data: IData = await res.json();
+  const data: IData<R> = await res.json();
   return data.result;
 };
