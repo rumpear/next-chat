@@ -3,5 +3,6 @@ export const ROUTES = {
   dashboard: {
     base: '/dashboard',
     add: '/dashboard/add',
+    requests: '/dashboard/requests',
   },
 };
