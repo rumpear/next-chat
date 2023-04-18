@@ -1,8 +1,9 @@
-import { IUser, TFriendRequests } from '@/interfaces/global';
 import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
+import FriendRequests from '@/components/FriendRequests';
+import { IUser, TFriendRequests } from '@/interfaces/global';
 
 export default async function FriendRequestsPage() {
   const session = await getServerSession(authOptions);
@@ -32,6 +33,11 @@ export default async function FriendRequestsPage() {
       }
     })
   );
+  const filteredSenderList: IUser[] = senderList.filter(
+    (sender) => sender
+  ) as IUser[];
+  console.log(filteredSenderList);
+
   // console.log(senderIdList, 'senderIdList');
   console.log(senderList, 'senderList');
   // console.log(typeof senderList, 'senderList');
@@ -39,10 +45,10 @@ export default async function FriendRequestsPage() {
     <main className='pt-8'>
       <h1 className='font-bold text-5xl mb-8'>Add a friend</h1>
       <div className='flex flex-col gap-4'>
-        {/* <FriendRequests
-          incomingFriendRequests={incomingFriendRequests}
+        <FriendRequests
+          incomingRequests={filteredSenderList}
           sessionId={session.user.id}
-        /> */}
+        />
       </div>
     </main>
   );
