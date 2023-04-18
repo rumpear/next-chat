@@ -1,12 +1,12 @@
-import Icons, { TIcon } from '@/components/ui/Icons';
-import { authOptions } from '@/lib/auth';
+import { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
 import Image from 'next/image';
 import SignOutButton from '@/components/SignOutButton';
-import FriendRequests from '@/components/FriendRequests';
+import SidebarFriendRequests from '@/components/SidebarFriendRequests';
+import Icons, { TIcon } from '@/components/ui/Icons';
+import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
 import { TFriendRequests } from '@/interfaces/global';
 
@@ -97,7 +97,7 @@ export default async function DashboardLayout({
                 })}
 
                 <li>
-                  <FriendRequests
+                  <SidebarFriendRequests
                     sessionId={session.user.id}
                     initUnseenReqCount={unseenReqCount}
                   />
