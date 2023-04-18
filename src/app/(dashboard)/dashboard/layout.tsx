@@ -8,6 +8,7 @@ import SidebarFriendRequests from '@/components/SidebarFriendRequests';
 import Icons, { TIcon } from '@/components/ui/Icons';
 import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
+import { GOOGLE_AVATAR_SIZES } from '@/constants/common';
 import { TFriendRequests } from '@/interfaces/global';
 
 interface IDashboardLayoutProps {
@@ -109,7 +110,8 @@ export default async function DashboardLayout({
               <div className='flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900'>
                 <div className='relative h-8 w-8 bg-gray-50'>
                   <Image
-                    fill
+                    width={GOOGLE_AVATAR_SIZES}
+                    height={GOOGLE_AVATAR_SIZES}
                     referrerPolicy='no-referrer'
                     className='rounded-full'
                     src={session.user.image || ''}
