@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import { db } from '@/lib/db';
 import { ROUTES } from '@/constants/routes';
 import type { User } from '@/interfaces/db';
+import { fetchRedis } from './redis';
 
 const getGoogleCredentials = () => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -36,23 +37,31 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      const dbUser: User | null = await db.get(`user:${token.id}`);
-      console.log(dbUser, 'dbUser auth lib');
-      console.log(user, 'user auth lib');
-      console.log(token, 'token auth lib');
+      const dbUserRes = await fetchRedis<string>('get', `user:${token.id}`);
 
-      if (!dbUser) {
-        token.id = user.id;
+      try {
+        const dbUserParsed = JSON.parse(dbUserRes);
+        // console.log(dbUserParsed, 'dbUser auth lib');
+        // console.log(user, 'user auth lib');
+        // console.log(token, 'token auth lib');
+
+        if (!dbUserParsed) {
+          token.id = user.id;
+          return token;
+        }
+
+        return {
+          id: dbUserParsed.id,
+          name: dbUserParsed.name,
+          email: dbUserParsed.email,
+          picture: dbUserParsed.image,
+        };
+      } catch (error) {
+        console.log(error, 'dbUserParsed error');
         return token;
       }
-
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        picture: dbUser.image,
-      };
     },
+
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
