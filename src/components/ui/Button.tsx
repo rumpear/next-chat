@@ -1,14 +1,14 @@
-import { getClassNames } from '@/lib/utils';
-import { cva, VariantProps } from 'class-variance-authority';
-import { Loader2 } from 'lucide-react';
 import { ButtonHTMLAttributes } from 'react';
+import { Loader2 } from 'lucide-react';
+import { cva, VariantProps } from 'class-variance-authority';
+import { getClassNames } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'active: scale-95 inline-flex items-center justify-center rounded-md text-sm font-medium transition-color focus:outline-none focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+  'active:scale-95 inline-flex items-center justify-center rounded-md text-sm font-medium transition-color focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
   {
     variants: {
       variant: {
-        default: 'bg-slate-900 text-white hover: bg-slate-800',
+        default: 'bg-slate-900 text-white hover:bg-slate-800',
         ghost: 'bg-transparent hover:text-slate-900 hover:bg-slate-200',
       },
       size: {
@@ -46,7 +46,7 @@ const Button = ({
   // console.log(buttonVariants({ variant, size, className }));
   return (
     <button className={classNames} disabled={isLoading} {...props}>
-      {isLoading ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : children}
+      {isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : children}
     </button>
   );
 };
