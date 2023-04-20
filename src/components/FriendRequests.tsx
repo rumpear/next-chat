@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
+import axios from 'axios';
+import Image from 'next/image';
+import { Check, UserPlus, X } from 'lucide-react';
 import { GOOGLE_AVATAR_SIZES } from '@/constants/common';
 import { IUser } from '@/interfaces/global';
-import { Check, UserPlus, X } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
 
 interface IFriendRequestsProps {
   incomingRequests: IIncomingRequest[];
@@ -25,8 +26,19 @@ const FriendRequests = ({
   const [friendRequests, setFriendsRequests] =
     useState<IIncomingRequest[]>(incomingRequests);
 
-  const isFriendRequestsExist = friendRequests.length;
+  const addFriend = async (id: string) => {
+    console.log('click');
+    try {
+      await axios.post('api/friends/accept', {
+        id,
+      });
+    } catch (error) {
+      console.log(error, 'new error');
+    }
+  };
 
+  const isFriendRequestsExist = friendRequests.length;
+  // console.log(friendRequests, 'friendRequests')
   return (
     <>
       {isFriendRequestsExist &&
@@ -47,6 +59,7 @@ const FriendRequests = ({
             <button
               aria-label='accept friend'
               className='w-8 h-8 bg-indigo-600 hover:bg-indigo-700 grid place-items-center rounded-full transition hover:shadow-md'
+              onClick={() => addFriend(friend.id!)}
             >
               <Check className='font-semibold text-white w-3/4 h-3/4' />
             </button>
