@@ -29,7 +29,7 @@ const FriendRequests = ({
   const addFriend = async (id: string) => {
     console.log('click');
     try {
-      await axios.post('api/friends/accept', {
+      await axios.post('/api/friends/accept', {
         id,
       });
     } catch (error) {
