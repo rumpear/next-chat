@@ -1,9 +1,9 @@
+import { ZodError, z } from 'zod';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { fetchRedis } from '@/lib/redis';
 import { emailSchema } from '@/lib/schemes';
-import { getServerSession } from 'next-auth';
-import { ZodError, z } from 'zod';
 
 type TBody = z.infer<typeof emailSchema>;
 type TIsMember = 0 | 1;
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
 
     db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
 
-    return new Response('Added successfully', { status: 200 });
+    return new Response('Friend added successfully', { status: 200 });
   } catch (e) {
     console.log(e, 'error');
     if (e instanceof ZodError) {
