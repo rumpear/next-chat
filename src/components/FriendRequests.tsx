@@ -37,6 +37,14 @@ const FriendRequests = ({
     }
   };
 
+  const denyFriend = async (id: string) => {
+    try {
+      await axios.post('/api/friends/deny', { id });
+    } catch (error) {
+      console.log(error, 'new error');
+    }
+  };
+
   const isFriendRequestsExist = friendRequests.length;
   // console.log(friendRequests, 'friendRequests')
   return (
@@ -57,14 +65,15 @@ const FriendRequests = ({
             <p className='font-medium text-lg'>{friend.name}</p>
 
             <button
+              onClick={() => addFriend(friend.id!)}
               aria-label='accept friend'
               className='w-8 h-8 bg-indigo-600 hover:bg-indigo-700 grid place-items-center rounded-full transition hover:shadow-md'
-              onClick={() => addFriend(friend.id!)}
             >
               <Check className='font-semibold text-white w-3/4 h-3/4' />
             </button>
 
             <button
+              onClick={() => denyFriend(friend.id!)}
               aria-label='deny friend'
               className='w-8 h-8 bg-red-600 hover:bg-red-700 grid place-items-center rounded-full transition hover:shadow-md'
             >
