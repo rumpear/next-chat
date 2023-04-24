@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       return new Response('Friend request is not exist', { status: 400 });
     }
 
-    return new Response('Ok', { status: 200 });
+    return new Response('Friend request accepted', { status: 200 });
   } catch (error) {
     console.log(error, 'error');
     if (error instanceof z.ZodError) {
