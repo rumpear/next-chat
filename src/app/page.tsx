@@ -1,6 +1,5 @@
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
 import Link from 'next/link';
+import { Inter } from 'next/font/google';
 import { ROUTES } from '@/constants/routes';
 
 const inter = Inter({ subsets: ['latin'] });
