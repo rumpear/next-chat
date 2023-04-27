@@ -45,7 +45,7 @@ const FriendRequests = ({
     }
   };
 
-  const isFriendRequestsExist = friendRequests.length;
+  const isFriendRequestsExist = !!friendRequests.length;
   // console.log(friendRequests, 'friendRequests')
   return (
     <>
