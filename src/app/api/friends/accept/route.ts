@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
+import {db} from "@/lib/db";
 
 export async function POST(req: Request) {
   console.log('POST');
@@ -37,6 +38,11 @@ export async function POST(req: Request) {
     if (!isFriendRequestExist) {
       return new Response('Friend request is not exist', { status: 400 });
     }
+
+    await db.sadd(`user:${session.user.id}:friends`, idToAdd);
+    await db.sadd(`user:${idToAdd}:friends`, session.user.id);
+    await db.srem(`user:${session.user.id}:incoming_friend_requests`, idToAdd);
+    await db.srem(`user:${idToAdd}:outgoing_friend_requests`, session.user.id);
 
     return new Response('Friend request accepted', { status: 200 });
   } catch (error) {
