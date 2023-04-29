@@ -57,7 +57,8 @@ export async function POST(req: Request) {
       return new Response('This user already your friend', { status: 409 });
     }
 
-    db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
+    await db.sadd(`user:${session.user.id}:outgoing_friend_requests`, idToAdd)
+    await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
 
     return new Response('Friend added successfully', { status: 200 });
   } catch (e) {
