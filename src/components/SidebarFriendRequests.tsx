@@ -27,7 +27,7 @@ const SidebarFriendRequests = ({
       </div>
       <p className='truncate'>Friend requests</p>
 
-      {unseenReqCount && (
+      {!!unseenReqCount && (
         <div className='rounded-full w-5 h-5 text-xs flex justify-center items-center text-white bg-indigo-600'>
           {unseenReqCount}
         </div>
