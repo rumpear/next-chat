@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
 import { IMessage, IUser } from '@/interfaces/global';
+import { messageSchema } from '@/lib/schemas';
 
 interface ICurrentChatPageProps {
   params: {
@@ -22,7 +23,10 @@ const getMessages = async (chatId: string) => {
       FIRST_IDX,
       LAST_IDX
     );
-    const messages: IMessage[] = res.map((message) => JSON.parse(message));
+    const parsedMessages: IMessage[] = res.map((message) =>
+      JSON.parse(message)
+    );
+    const messages = messageSchema.parse(parsedMessages);
     return messages;
   } catch (error) {
     notFound();
