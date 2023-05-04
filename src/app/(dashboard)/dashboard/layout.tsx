@@ -9,7 +9,7 @@ import Icons, { TIcon } from '@/components/ui/Icons';
 import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
 import { GOOGLE_AVATAR_SIZES } from '@/constants/common';
-import { TFriendRequests } from '@/interfaces/global';
+import { IUser, TFriendRequests } from '@/interfaces/global';
 
 interface IDashboardLayoutProps {
   children: ReactNode;
@@ -31,6 +31,20 @@ const sidebarOptions: ISidebarOption[] = [
   },
 ];
 
+const getFriendsByUserId = async (userId: string) => {
+  const friendIds: string[] = await fetchRedis(
+    'smembers',
+    `user:${userId}:friends`
+  );
+
+  const promisedFriendsList = friendIds.map(async (id) => {
+    return await fetchRedis<IUser>('get', `user:${id}`);
+  });
+
+  const friendList = await Promise.all(promisedFriendsList);
+  return friendList;
+};
+
 export default async function DashboardLayout({
   children,
 }: IDashboardLayoutProps) {
@@ -39,13 +53,17 @@ export default async function DashboardLayout({
     return notFound();
   }
 
+  const friendsList = await getFriendsByUserId(session.user.id);
+  const isFriendsListExist = !!friendsList.length;
+  console.log(friendsList, 'friendList');
+
   const friendRequests = await fetchRedis<TFriendRequests>(
     'smembers',
     `user:${session.user.id}:incoming_friend_requests`
   );
 
   const unseenReqCount = friendRequests.length;
-  console.log(unseenReqCount, 'unseenReqCount');
+  // console.log(unseenReqCount, 'unseenReqCount');
 
   return (
     <div className='w-full flex h-screen'>
@@ -65,13 +83,18 @@ export default async function DashboardLayout({
         </Link>
 
         <div className='text-xs font-semibold leading-6 text-gray-400'>
-          Your chats
+          {isFriendsListExist ? 'Your chats' : 'You dont have any chats'}
         </div>
 
         <nav className='flex flex-1 flex-col'>
           <ul role='list' className='flex flex-1 flex-col gap-y-7'>
             <li>
-              {/* <SidebarChatList sessionId={session.user.id} friends={friends} /> */}
+              {friendsList.map((friend) => {
+                const parsedFriend = JSON.parse(friend);
+                console.log(friend, '----friend');
+                return <p key={parsedFriend.id}>{parsedFriend.name}</p>;
+              })}
+              {/*<SidebarChatList sessionId={session.user.id} friends={friends} />*/}
             </li>
             <li>
               <div className='text-xs font-semibold leading-6 text-gray-400'>
