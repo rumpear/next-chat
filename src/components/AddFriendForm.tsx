@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ZodError, z } from 'zod';
-import { emailSchema } from '@/lib/schemes';
+import { emailSchema } from '@/lib/schemas';
 import Button from '@/components/ui/Button';
 
 interface IAddFormData {

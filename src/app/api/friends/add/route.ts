@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { fetchRedis } from '@/lib/redis';
-import { emailSchema } from '@/lib/schemes';
+import { emailSchema } from '@/lib/schemas';
 
 type TBody = z.infer<typeof emailSchema>;
 type TIsMember = 0 | 1;
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
       return new Response('This user already your friend', { status: 409 });
     }
 
-    await db.sadd(`user:${session.user.id}:outgoing_friend_requests`, idToAdd)
+    await db.sadd(`user:${session.user.id}:outgoing_friend_requests`, idToAdd);
     await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.user.id);
 
     return new Response('Friend added successfully', { status: 200 });

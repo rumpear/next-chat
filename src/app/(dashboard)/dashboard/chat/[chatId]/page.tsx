@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { authOptions } from '@/lib/auth';
 import { fetchRedis } from '@/lib/redis';
-import { IMessage, IUser } from '@/interfaces/global';
 import { messageSchema } from '@/lib/schemas';
+import { IMessage, IUser } from '@/interfaces/global';
 
 interface ICurrentChatPageProps {
   params: {
