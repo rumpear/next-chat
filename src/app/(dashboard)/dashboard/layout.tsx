@@ -32,17 +32,28 @@ const sidebarOptions: ISidebarOption[] = [
 ];
 
 const getFriendsByUserId = async (userId: string) => {
-  const friendIds: string[] = await fetchRedis(
+  const friendIds = await fetchRedis<string[]>(
     'smembers',
     `user:${userId}:friends`
   );
+  console.log(friendIds, 'friendIds-----');
 
   const promisedFriendsList = friendIds.map(async (id) => {
-    return await fetchRedis<IUser>('get', `user:${id}`);
+    return await fetchRedis<string>('get', `user:${id}`);
   });
 
   const friendList = await Promise.all(promisedFriendsList);
-  return friendList;
+
+  const parsedFriendList = friendList.map((friend) => {
+    try {
+      const parsedFriend: IUser = JSON.parse(friend);
+      return parsedFriend;
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  console.log(parsedFriendList, 'parsedFriendList');
+  return parsedFriendList;
 };
 
 export default async function DashboardLayout({
@@ -89,11 +100,14 @@ export default async function DashboardLayout({
         <nav className='flex flex-1 flex-col'>
           <ul role='list' className='flex flex-1 flex-col gap-y-7'>
             <li>
-              {friendsList.map((friend) => {
-                const parsedFriend = JSON.parse(friend);
-                console.log(friend, '----friend');
-                return <p key={parsedFriend.id}>{parsedFriend.name}</p>;
-              })}
+              {isFriendsListExist &&
+                friendsList.map((friend) => {
+                  return (
+                    <p className='text-2xl text-black' key={friend?.id}>
+                      {friend?.name}
+                    </p>
+                  );
+                })}
               {/*<SidebarChatList sessionId={session.user.id} friends={friends} />*/}
             </li>
             <li>
