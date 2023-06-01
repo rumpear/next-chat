@@ -34,12 +34,12 @@ export default async function FriendRequestsPage() {
     })
   );
   const filteredSenderList: IUser[] = senderList.filter(
-    (sender) => sender
-  ) as IUser[];
-  console.log(filteredSenderList);
+    (sender): sender is IUser => !!sender
+  );
+  // console.log(filteredSenderList);
 
   // console.log(senderIdList, 'senderIdList');
-  console.log(senderList, 'senderList');
+  // console.log(senderList, 'senderList');
   // console.log(typeof senderList, 'senderList');
   return (
     <main className='pt-8'>
